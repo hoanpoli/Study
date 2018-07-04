@@ -20,4 +20,7 @@ public interface UserDao extends CrudRepository<Users, Integer> {
 
 	@Query(value = "SELECT r.userName FROM Users r WHERE r.id = :id")
 	public List<String> getRoleByUserId(@Param("id") int id);
+
+	@Query("FROM Users")
+	public List<Users> search();
 }

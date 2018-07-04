@@ -1,7 +1,7 @@
 package com.example.test.rsp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.example.test.common.Const;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BaseRsp {
 	// region -- Fields --

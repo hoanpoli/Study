@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -178,6 +179,12 @@ public class UserController {
 			res.setError(ex.getMessage());
 		}
 
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<?> GetInforUser() {
+		List<Users> res = userService.search();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 

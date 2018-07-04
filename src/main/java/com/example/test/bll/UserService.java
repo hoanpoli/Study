@@ -46,6 +46,10 @@ public class UserService implements UserDetailsService {
 	// end
 
 	// region -- Methods --
+	public List<Users> search() {
+		List<Users> res = userDao.search();
+		return res;
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
