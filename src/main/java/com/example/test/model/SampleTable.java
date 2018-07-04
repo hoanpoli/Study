@@ -9,7 +9,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "account", schema = "public")
+@Table(name = "sample_table", schema = "public")
 public class SampleTable {
 	// region -- Fields --
 
