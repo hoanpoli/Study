@@ -14,18 +14,14 @@ import org.springframework.stereotype.Service;
 import com.example.test.model.SampleTable;
 import com.example.test.dal.*;
 
-
-
-@Service(value= "sampletableService")
+@Service(value = "sampletableService")
 @Transactional
 public class SampleTableService {
 	@Autowired
 	private SampleTableDao sampletableDao;
-	
-	public List<SampleTable> search(){
-		List<SampleTable > res = sampletableDao.search();
-		return res ;
+
+	public List<SampleTable> search() {
+		List<SampleTable> res = sampletableDao.search();
+		return res;
 	}
 }
-
-

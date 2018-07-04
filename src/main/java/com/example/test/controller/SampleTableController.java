@@ -17,10 +17,10 @@ import com.example.test.model.SampleTable;
 public class SampleTableController {
 	@Autowired
 	private SampleTableService sampletableService;
-	
+
 	@GetMapping("")
-	public ResponseEntity<?> getAllAccountOfOwner(){
+	public ResponseEntity<?> getAllAccountOfOwner() {
 		List<SampleTable> stp = sampletableService.search();
-		return new ResponseEntity<>(stp,HttpStatus.OK);
+		return new ResponseEntity<>(stp, HttpStatus.OK);
 	}
 }

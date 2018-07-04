@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,22 +16,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.test.bll.SettingService;
 import com.example.test.bll.UserService;
 import com.example.test.common.Const;
-import com.example.test.common.Utils;
 import com.example.test.config.JwtTokenUtil;
-import com.example.test.dto.PayloadDto;
 import com.example.test.model.AuthToken;
 import com.example.test.model.Setting;
 import com.example.test.model.Users;
 import com.example.test.req.UserSignInReq;
 import com.example.test.req.UserSignUpReq;
-import com.example.test.rsp.BaseRsp;
 import com.example.test.rsp.MultipleRsp;
 import com.example.test.rsp.SingleRsp;
 
@@ -76,8 +71,6 @@ public class UserController {
 			// Get data
 			String userName = req.getUserName();
 			String password = req.getPassword();
-			String clientKey = req.getClienKey();
-			String token = req.getToken();
 			boolean sendToken = req.isSendToken();
 
 			// Handle
@@ -128,8 +121,6 @@ public class UserController {
 						break;
 					}
 				} else {
-					userService.verifyToken(clientKey, userId, token, m.getUuid());
-
 					List<SimpleGrantedAuthority> z = userService.getRole(m.getId());
 					String t1 = jwtTokenUtil.doGenerateToken(m, z);
 					data.put("key", t1);
@@ -182,45 +173,6 @@ public class UserController {
 				res.setResult(token);
 			} else {
 				res.setError("User name or email have already registed!");
-			}
-		} catch (Exception ex) {
-			res.setError(ex.getMessage());
-		}
-
-		return new ResponseEntity<>(res, HttpStatus.OK);
-	}
-
-	@PostMapping("/save")
-	public ResponseEntity<?> save(@RequestBody UserSignUpReq req, @RequestHeader HttpHeaders header) {
-		BaseRsp res = new BaseRsp();
-
-		try {
-			PayloadDto pl = Utils.getTokenInfor(header);
-			int id = pl.getId();
-
-			// Get data
-			String userName = req.getUserName();
-			String firstName = req.getFirstName();
-			String lastName = req.getLastName();
-			String email = req.getEmail();
-			String contactNo = req.getContactNo();
-			String remarks = req.getRemarks();
-
-			// Convert data
-			Users m = new Users();
-			m.setId(id);
-			m.setContactNo(contactNo);
-			m.setEmail(email);
-			m.setFirstName(firstName);
-			m.setLastName(lastName);
-			m.setUserName(userName);
-			m.setRemarks(remarks);
-
-			// Handle
-			String tmp = userService.save(m);
-
-			if (!tmp.isEmpty()) {
-				res.setError("Can not update user");
 			}
 		} catch (Exception ex) {
 			res.setError(ex.getMessage());

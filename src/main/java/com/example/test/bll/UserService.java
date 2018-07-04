@@ -1,10 +1,8 @@
 package com.example.test.bll;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -22,11 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.test.common.Const;
-import com.example.test.common.Enums;
 import com.example.test.common.Utils;
 import com.example.test.dal.AuthTokenDao;
 import com.example.test.dal.UserDao;
-import com.example.test.dto.ProfileDto;
 import com.example.test.model.AuthToken;
 import com.example.test.model.Users;
 
@@ -126,54 +122,6 @@ public class UserService implements UserDetailsService {
 		return res;
 	}
 
-	public ProfileDto getProfile(int id) {
-		ProfileDto res = new ProfileDto();
-
-		Users m = userDao.getBy(id);
-		res.setContactNo(m.getContactNo());
-		res.setEmail(m.getEmail());
-		res.setFirstName(m.getFirstName());
-		res.setLastName(m.getLastName());
-		res.setRemarks(m.getRemarks());
-		res.setUserName(m.getUserName());
-
-		return res;
-	}
-
-	public String delete(int id) {
-		String res = "";
-
-		Users m = userDao.getBy(id);
-		if (m != null) {
-			m.setDeleted(true);
-			userDao.save(m);
-		}
-
-		return res;
-	}
-
-	public Users forgotPassword(String password, String token) throws Exception {
-		Users m = userDao.getByToken(token);
-		if (m == null) {
-			throw new Exception("Invalid token, no such token allocated to a user!");
-		}
-
-		Date t = m.getPassReminderExpire();
-		if (!Utils.verify(t)) {
-			throw new Exception("Invalid token , token has expired");
-		}
-
-		m.setPasswordHash(password);
-		m.setPassReminderExpire(null);
-		m.setPassReminderToken(null);
-		m.setModifyOn(new Date());
-		m.setModifyBy(m.getId());
-
-		userDao.save(m);
-
-		return m;
-	}
-	
 	/**
 	 * Generate token/OTP
 	 * 
@@ -213,93 +161,8 @@ public class UserService implements UserDetailsService {
 		Date d = Utils.getTime(Calendar.MINUTE, Const.Authentication.TOKEN_MINUTE);
 		m.setExpireOn(d);
 
-		// Reset data
-		m.setVerified(false);
-		m.setModifyBy(null);
-		m.setModifyOn(null);
-
 		authTokenDao.save(m);
 
 		return m;
 	}
-
-	public void verifyToken(String clientKey, int userId, String token, UUID uuid) throws Exception {
-		AuthToken m = authTokenDao.getBy(clientKey, "", userId);
-
-		if (m == null) {
-			throw new Exception(Enums.Error.E201.toString());
-		}
-
-		Date t = m.getExpireOn();
-		if (!Utils.verify(t)) {
-			throw new Exception(Enums.Error.E202.toString());
-		}
-
-		String authKey = m.getToken();
-		if (Const.Setting.CODE_TOKEN.equals(authKey)) {
-			Date d = new Date();
-			SimpleDateFormat f = new SimpleDateFormat(Const.DateTime.TOKEN);
-			f.setTimeZone(TimeZone.getTimeZone("UTC"));
-			String s = f.format(d);
-			s += uuid;
-			int n = Const.Authentication.TOKEN_NUMBER;
-			authKey = Utils.getToken(s, n);
-		}
-
-		if (!authKey.equals(token)) {
-			throw new Exception(Enums.Error.E203.toString());
-		}
-
-		m.setToken(token);
-		m.setVerified(true);
-		m.setModifyOn(new Date());
-		m.setModifyBy(userId);
-
-		authTokenDao.save(m);
-	}
-
-	public Users getActiveCode(int id) {
-		Users res = null;
-
-		try {
-			res = userDao.getBy(id);
-			if (res != null) {
-				res.setModifyBy(id);
-				res.setModifyOn(new Date());
-
-				Date t = Utils.getTime(Calendar.HOUR, 1);
-				res.setActivationExpire(t);
-				int n = Const.Authentication.ACTIVE_NUMBER;
-				String c = Utils.getToken(n);
-				res.setActiveCode(c);
-
-				userDao.save(res);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return res;
-	}
-
-	public Users verifyActiveCode(String code) {
-		Users res = null;
-
-		try {
-			res = userDao.getByActiveCode(code);
-			if (res != null) {
-				res.setModifyOn(new Date());
-				res.setActivationExpire(null);
-				res.setActiveCode(null);
-
-				userDao.save(res);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return res;
-	}
-
-	// end
 }
