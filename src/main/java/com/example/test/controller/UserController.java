@@ -183,6 +183,7 @@ public class UserController {
 	}
 
 	@GetMapping("/search")
+	// Handle
 	public ResponseEntity<?> GetInforUser() {
 		List<Users> res = userService.search();
 		return new ResponseEntity<>(res, HttpStatus.OK);
