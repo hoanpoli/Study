@@ -1,6 +1,5 @@
 package com.example.test.model;
 
-import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -10,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
@@ -55,28 +52,11 @@ public class Users {
 	@Type(type = "pg-uuid")
 	private UUID uuid;
 
-	@Type(type = "pg-uuid")
-	private UUID eoth;
-
 	@Column(columnDefinition = "varchar(256)")
 	private String passwordHash;
 
 	@Column(columnDefinition = "bool")
 	private boolean isDeleted;
-
-	@Column(columnDefinition = "integer")
-	private Integer createBy;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
-	private Date createOn;
-
-	@Column(columnDefinition = "integer")
-	private Integer modifyBy;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
-	private Date modifyOn;
 
 	// end
 
@@ -162,14 +142,6 @@ public class Users {
 		this.uuid = uuid;
 	}
 
-	public UUID getEoth() {
-		return eoth;
-	}
-
-	public void setEoth(UUID eoth) {
-		this.eoth = eoth;
-	}
-
 	public String getPasswordHash() {
 		return passwordHash;
 	}
@@ -184,38 +156,6 @@ public class Users {
 
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
-	}
-
-	public Integer getCreateBy() {
-		return createBy;
-	}
-
-	public void setCreateBy(Integer createBy) {
-		this.createBy = createBy;
-	}
-
-	public Date getCreateOn() {
-		return createOn;
-	}
-
-	public void setCreateOn(Date createOn) {
-		this.createOn = createOn;
-	}
-
-	public Integer getModifyBy() {
-		return modifyBy;
-	}
-
-	public void setModifyBy(Integer modifyBy) {
-		this.modifyBy = modifyBy;
-	}
-
-	public Date getModifyOn() {
-		return modifyOn;
-	}
-
-	public void setModifyOn(Date modifyOn) {
-		this.modifyOn = modifyOn;
 	}
 
 	// end

@@ -20,11 +20,7 @@ CREATE TABLE PUBLIC."user"
 	"status"				CHARACTER(3) NOT NULL DEFAULT 'ACT',
 	"uuid"					UUID,
 	"password_hash"			VARCHAR(256),
-	"is_deleted"			BOOLEAN NOT NULL DEFAULT FALSE,
-	"create_by"				INT4,
-	"create_on"				TIMESTAMP,
-	"modify_by"				INT4,
-	"modify_on"				TIMESTAMP
+	"is_deleted"			BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS PUBLIC."auth_token";

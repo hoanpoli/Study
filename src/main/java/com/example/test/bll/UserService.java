@@ -95,8 +95,6 @@ public class UserService implements UserDetailsService {
 				res = "Duplicate data";
 			} else {
 				m.setUuid(UUID.randomUUID());
-				m.setCreateBy(1);
-				m.setCreateOn(new Date());
 
 				userDao.save(m);
 			}
@@ -105,8 +103,6 @@ public class UserService implements UserDetailsService {
 			if (m1 == null) {
 				res = "Id does not exist";
 			} else {
-				m1.setModifyBy(1);
-				m1.setModifyOn(new Date());
 
 				m1.setFirstName(m.getFirstName());
 				m1.setLastName(m.getLastName());
